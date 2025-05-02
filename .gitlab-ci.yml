@@ -83,6 +83,21 @@ build_android:
   dependencies:
     - install_dependencies
 
+# Deploy APK for easy download
+pages:
+  stage: deploy
+  script:
+    - mkdir -p public/downloads
+    - cp android/app/build/outputs/apk/release/app-release.apk public/downloads/app-release.apk
+    - echo '<html><head><title>App Downloads</title></head><body><h1>Downloads</h1><p><a href="downloads/app-release.apk">Download Android APK</a></p></body></html>' > public/index.html
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
+  dependencies:
+    - build_android
+
 
 
 
