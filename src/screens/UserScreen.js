@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet, TextInput } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { login, logout, setUser, setToken } from '../redux/authSlice'; // Import actions
+import { login, logout } from '../redux/authSlice'; // Import actions
 
 export default function UserScreen() {
   const dispatch = useDispatch();
