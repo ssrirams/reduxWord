@@ -55,8 +55,13 @@ build_android:
     - echo "Installing required packages..."
     - apt-get update && apt-get install -y openjdk-17-jdk wget unzip
 
+    - echo "Creating SDK directory..."
+    - mkdir -p /sdk
+
     - echo "Downloading Android SDK tools..."
     - wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O cmdline-tools.zip
+
+    - echo "Unzipping SDK tools..."
     - unzip -q cmdline-tools.zip -d /sdk/cmdline-tools
 
     - echo "Organizing cmdline-tools into latest/..."
@@ -79,6 +84,7 @@ build_android:
     paths:
       - node_modules/
       - android/.gradle
+
 
 
 
