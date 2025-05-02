@@ -2,8 +2,8 @@ image: node:18 # Use an image with Node.js pre-installed
 
 stages:
   - install
-  - lint
   - test
+  - lint
   - build
   - security
 
