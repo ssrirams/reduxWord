@@ -46,6 +46,12 @@ install_dependencies:
 # Build the APK for Android
 build_android:
   stage: build
+  image: node:18
   script:
+    - echo "Installing JDK..."
+    - apt-get update && apt-get install -y openjdk-17-jdk
+    - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+    - echo "JAVA_HOME set to $JAVA_HOME"
     - echo "Building Android APK..."
     - cd android && ./gradlew assembleRelease && cd ..
+
