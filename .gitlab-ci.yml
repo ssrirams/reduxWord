@@ -54,20 +54,32 @@ build_android:
   before_script:
     - echo "Installing required packages..."
     - apt-get update && apt-get install -y openjdk-17-jdk wget unzip
+
     - echo "Downloading Android SDK tools..."
     - wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O cmdline-tools.zip
-    - unzip cmdline-tools.zip -d /sdk
+    - unzip -q cmdline-tools.zip -d /sdk
+
+    - echo "Setting up cmdline-tools structure..."
     - mkdir -p /sdk/cmdline-tools/latest
-    # Move the contents of cmdline-tools (but not the 'latest' directory itself)
-    - find /sdk/cmdline-tools -mindepth 1 -maxdepth 1 ! -name 'latest' -exec mv {} /sdk/cmdline-tools/latest/ \;
-    - yes | /sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/sdk "platform-tools" "platforms;android-33" "build-tools;33.0.2"
+    - mv /sdk/cmdline-tools/cmdline-tools/* /sdk/cmdline-tools/latest/ || { echo "Failed to move cmdline-tools files"; exit 1; }
+
+    - echo "Installing SDK packages..."
+    - yes | /sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/sdk "platform-tools" "platforms;android-33" "build-tools;33.0.2" || { echo "sdkmanager failed"; exit 1; }
+
   script:
-    - npm install
-    - cd android && ./gradlew assembleRelease && cd ..
+    - echo "Installing Node dependencies..."
+    - npm install || { echo "npm install failed"; exit 1; }
+
+    - echo "Building Android release..."
+    - cd android
+    - ./gradlew assembleRelease || { echo "Gradle build failed"; exit 1; }
+    - cd ..
+
   cache:
     paths:
       - node_modules/
       - android/.gradle
+
 
 
 
