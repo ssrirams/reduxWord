@@ -1,4 +1,4 @@
-image: node:18 # Use an image with Node.js pre-installed
+image: node:18
 
 stages:
   - install
@@ -7,51 +7,56 @@ stages:
   - build
   - security
 
-# Include external templates (e.g., for security scanning)
 include:
   - template: Security/SAST.gitlab-ci.yml
 
-# Install dependencies (including React Native dependencies)
+variables:
+  JAVA_HOME: "/usr/lib/jvm/java-17-openjdk-amd64"
+
+# Install Node modules and Java
 install_dependencies:
   stage: install
   script:
-    - echo "Installing dependencies started..."
+    - echo "Installing dependencies..."
+    - apt-get update && apt-get install -y openjdk-17-jdk
     - npm install
-    - echo "Installing dependencies ended..."
-
-   
   cache:
     paths:
-      - node_modules/  # Cache node_modules to speed up future runs
-    # If you use Yarn, uncomment the line below and adjust
-    # paths:
-    #   - ~/.cache/yarn
+      - node_modules/
 
-# # Linting job to ensure code quality
-# lint:
-#   stage: lint
-#   script:
-#     - echo "Running ESLint..."
-#     - npm run lint # Ensure you have ESLint configured for your project
+# Lint
+lint:
+  stage: lint
+  script:
+    - echo "Running ESLint..."
+    - npm run lint
 
-# # Unit tests (you can adjust based on your test suite)
-# test:
-#   stage: test
-#   script:
-#     - echo "Running tests..."
-#     - npx jest # Use npx to ensure jest is run from node_modules
-#     # Optional: Log the installed Jest version to confirm installation
-#     - npm list jest
+# Run tests
+test:
+  stage: test
+  script:
+    - echo "Running tests..."
+    - npm install
+    - npm test
+  cache:
+    paths:
+      - node_modules/
 
-# Build the APK for Android
+# Build Android APK
 build_android:
   stage: build
-  image: node:18
   script:
     - echo "Installing JDK..."
     - apt-get update && apt-get install -y openjdk-17-jdk
     - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
     - echo "JAVA_HOME set to $JAVA_HOME"
+
+    - echo "Installing Node.js dependencies..."
+    - npm install
+
     - echo "Building Android APK..."
     - cd android && ./gradlew assembleRelease && cd ..
-
+  cache:
+    paths:
+      - node_modules/
+      - android/.gradle
