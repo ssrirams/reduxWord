@@ -52,15 +52,17 @@ variables:
 build_android:
   stage: build
   before_script:
-    - apt-get update && apt-get install -y openjdk-17-jdk wget unzip
-    - mkdir -p /sdk
-    - export ANDROID_SDK_ROOT=/sdk
-    - wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O cmdline-tools.zip
-    - unzip -q cmdline-tools.zip -d /sdk/tmp-tools
-    - mkdir -p /sdk/cmdline-tools/latest
-    - mv /sdk/tmp-tools/cmdline-tools/* /sdk/cmdline-tools/latest/
-    - yes | /sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/sdk --licenses
-    - /sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/sdk "platform-tools" "platforms;android-33" "build-tools;33.0.2"
+  - apt-get update && apt-get install -y openjdk-11-jdk wget unzip
+  - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+  - mkdir -p /sdk
+  - export ANDROID_SDK_ROOT=/sdk
+  - wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O cmdline-tools.zip
+  - unzip -q cmdline-tools.zip -d /sdk/tmp-tools
+  - mkdir -p /sdk/cmdline-tools/latest
+  - mv /sdk/tmp-tools/cmdline-tools/* /sdk/cmdline-tools/latest/
+  - yes | /sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/sdk --licenses
+  - /sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/sdk "platform-tools" "platforms;android-33" "build-tools;33.0.2"
+  - chmod +x android/gradlew
 
   script:
     - export ANDROID_SDK_ROOT=/sdk
