@@ -1,13 +1,42 @@
-# You can override the included template(s) by including variable overrides
-# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
-# Secret Detection customization: https://docs.gitlab.com/user/application_security/secret_detection/pipeline/configure
-# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
-# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
-# Note that environment variables can be set in several places
-# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
+image: node:18 # Use an image with Node.js pre-installed
+
 stages:
-- test
-sast:
-  stage: test
+  - install
+  - test
+  - lint
+  - build
+  - security
+
+# Include external templates (e.g., for security scanning)
 include:
-- template: Security/SAST.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
+
+# Install dependencies (including React Native dependencies)
+install_dependencies:
+  stage: install
+  script:
+    - echo "Installing dependencies..."
+    - npm install
+    # Uncomment the line below if you're using CocoaPods for iOS dependencies
+    # - cd ios && pod install && cd ..
+
+# Linting job to ensure code quality
+lint:
+  stage: lint
+  script:
+    - echo "Running ESLint..."
+    - npm run lint # Ensure you have ESLint configured for your project
+
+# Unit tests (you can adjust based on your test suite)
+test:
+  stage: test
+  script:
+    - echo "Running tests..."
+    - npm test # Ensure you have your tests set up (e.g., Jest or Mocha)
+
+# Build the APK for Android
+build_android:
+  stage: build
+  script:
+    - echo "Building Android APK..."
+    - cd android && ./gradlew assembleRelease && cd ..
