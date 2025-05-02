@@ -52,38 +52,23 @@ variables:
 build_android:
   stage: build
   before_script:
-    - echo "Installing required packages..."
     - apt-get update && apt-get install -y openjdk-17-jdk wget unzip
-
-    - echo "Creating SDK directory..."
     - mkdir -p /sdk
-
-    - echo "Downloading Android SDK tools..."
     - wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O cmdline-tools.zip
-
-    - echo "Unzipping SDK tools..."
-    - unzip -q cmdline-tools.zip -d /sdk/cmdline-tools
-
-    - echo "Organizing cmdline-tools into latest/..."
-    - mkdir -p /sdk/cmdline-tools/latest
-    - find /sdk/cmdline-tools -mindepth 1 -maxdepth 1 ! -name 'latest' -exec mv {} /sdk/cmdline-tools/latest/ \;
-
-    - echo "Installing SDK packages..."
-    - yes | /sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/sdk "platform-tools" "platforms;android-33" "build-tools;33.0.2" || { echo "sdkmanager failed"; exit 1; }
+    - unzip -q cmdline-tools.zip -d /sdk
+    - mkdir -p /sdk/cmdline-tools
+    - mv /sdk/cmdline-tools /sdk/cmdline-tools/latest
+    - yes | /sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/sdk "platform-tools" "platforms;android-33" "build-tools;33.0.2"
 
   script:
-    - echo "Installing Node dependencies..."
-    - npm install || { echo "npm install failed"; exit 1; }
-
-    - echo "Building Android release..."
+    - npm install
     - cd android
-    - ./gradlew assembleRelease || { echo "Gradle build failed"; exit 1; }
-    - cd ..
+    - ./gradlew assembleRelease
+    - test -f app/build/outputs/apk/release/app-release.apk || { echo "APK build failed"; exit 1; }
 
-  cache:
+  artifacts:
     paths:
-      - node_modules/
-      - android/.gradle
+      - android/app/build/outputs/apk/release/app-release.apk
 
 
 
