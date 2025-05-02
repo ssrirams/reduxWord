@@ -1,46 +1,51 @@
-image: node:18
+image: node:18 # Use an image with Node.js pre-installed
 
 stages:
   - install
-  - lint
   - test
+  - lint
   - build
   - security
 
-cache:
-  paths:
-    - node_modules/
+# Include external templates (e.g., for security scanning)
+include:
+  - template: Security/SAST.gitlab-ci.yml
 
-variables:
-  CI: true
-
-before_script:
-  - npm install -g npm@latest
-  - npm ci
-
-install:
+# Install dependencies (including React Native dependencies)
+install_dependencies:
   stage: install
   script:
-    - echo "Dependencies installed using npm ci"
+    - echo "Installing dependencies..."
+    - npm install
+    - npm install --save-dev jest  # Ensure Jest is installed as a dev dependency
+    # Uncomment the line below if you're using CocoaPods for iOS dependencies
+    # - cd ios && pod install && cd ..
+  cache:
+    paths:
+      - node_modules/  # Cache node_modules to speed up future runs
+    # If you use Yarn, uncomment the line below and adjust
+    # paths:
+    #   - ~/.cache/yarn
 
+# Linting job to ensure code quality
 lint:
   stage: lint
   script:
-    - npm run lint
+    - echo "Running ESLint..."
+    - npm run lint # Ensure you have ESLint configured for your project
 
+# Unit tests (you can adjust based on your test suite)
 test:
   stage: test
   script:
-    - npm run test
+    - echo "Running tests..."
+    - npx jest # Use npx to ensure jest is run from node_modules
+    # Optional: Log the installed Jest version to confirm installation
+    - npm list jest
 
-build:
+# Build the APK for Android
+build_android:
   stage: build
   script:
-    - echo "Build step placeholder – React Native usually builds in Xcode/Android Studio"
-    - npm run android || true  # Avoid breaking CI on local-only build steps
-
-security:
-  stage: security
-  script:
-    - npx audit-ci --moderate
-  allow_failure: true
+    - echo "Building Android APK..."
+    - cd android && ./gradlew assembleRelease && cd ..
