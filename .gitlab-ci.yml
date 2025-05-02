@@ -6,6 +6,7 @@ stages:
   - lint
   - build
   - security
+  - deploy
 
 include:
   - template: Security/SAST.gitlab-ci.yml
