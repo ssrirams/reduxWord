@@ -7,12 +7,17 @@ stages:
   - build
   - security
 
+# Include external templates (e.g., for security scanning)
+include:
+  - template: Security/SAST.gitlab-ci.yml
+
 # Install dependencies (including React Native dependencies)
 install_dependencies:
   stage: install
   script:
     - echo "Installing dependencies..."
     - npm install
+    # Uncomment the line below if you're using CocoaPods for iOS dependencies
     # - cd ios && pod install && cd ..
 
 # Linting job to ensure code quality
@@ -21,12 +26,6 @@ lint:
   script:
     - echo "Running ESLint..."
     - npm run lint # Ensure you have ESLint configured for your project
-
-# Static Application Security Testing (SAST)
-sast:
-  stage: security
-  include:
-    - template: Security/SAST.gitlab-ci.yml
 
 # Unit tests (you can adjust based on your test suite)
 test:
@@ -41,12 +40,3 @@ build_android:
   script:
     - echo "Building Android APK..."
     - cd android && ./gradlew assembleRelease && cd ..
-
-# Optionally, you can add a deploy stage
-# deploy:
-#   stage: deploy
-#   script:
-#     - echo "Deploying APK to Firebase App Distribution (or any other service)"
-#     # - firebase appdistribution:distribute android/app/build/outputs/apk/release/app-release.apk --app <your-app-id>
-#   only:
-#     - main  # Deploy only when pushing to the main branch
