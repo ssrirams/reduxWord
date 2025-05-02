@@ -11,7 +11,6 @@ include:
   - template: Security/SAST.gitlab-ci.yml
 
 
-
 # Install Node modules and Java
 install_dependencies:
   stage: install
@@ -23,26 +22,25 @@ install_dependencies:
     paths:
       - node_modules/
 
-# lint:
-#   stage: lint
-#   script:
-#     - echo "Running ESLint..."
-#     - npm install
-#     - npx eslint .
+lint:
+  stage: lint
+  script:
+    - echo "Running ESLint..."
+    - npm install
+    - npx eslint .
 
 
-# # Run tests
-# test:
-#   stage: test
-#   script:
-#     - echo "Running tests..."
-#     - npm install
-#     - npm test
-#   cache:
-#     paths:
-#       - node_modules/
+# Run tests
+test:
+  stage: test
+  script:
+    - echo "Running tests..."
+    - npm install
+    - npm test
+  cache:
+    paths:
+      - node_modules/
 
-# Build Android APK
 # Build Android APK
 variables:
   ANDROID_SDK_ROOT: "/sdk"
