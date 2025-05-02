@@ -85,6 +85,52 @@ build_android:
     - install_dependencies
 
 # Deploy APK for easy download
+# pages:
+#   stage: deploy
+#   script:
+#     - mkdir -p public/downloads
+#     - cp android/app/build/outputs/apk/release/app-release.apk public/downloads/app-release.apk || echo "Failed to copy APK file. Checking if file exists..." && ls -la android/app/build/outputs/apk/release/
+#     - |
+#       cat > public/index.html << 'EOL'
+#       <!DOCTYPE html>
+#       <html>
+#         <head>
+#           <meta charset="UTF-8">
+#           <title>App Downloads</title>
+#           <style>
+#             body {
+#               font-family: Arial, sans-serif;
+#               max-width: 800px;
+#               margin: 0 auto;
+#               padding: 20px;
+#             }
+#             .download-btn {
+#               display: inline-block;
+#               background: #4CAF50;
+#               color: white;
+#               padding: 10px 20px;
+#               text-decoration: none;
+#               border-radius: 4px;
+#             }
+#           </style>
+#         </head>
+#         <body>
+#           <h1>App Downloads</h1>
+#           <p><a class="download-btn" href="downloads/app-release.apk">Download Android APK</a></p>
+#           <p>Last updated: $(date)</p>
+#         </body>
+#       </html>
+#       EOL
+#   artifacts:
+#     paths:
+#       - public
+#     expire_in: 30 days
+#   only:
+#     - main
+#   dependencies:
+#     - build_android
+#   needs:
+#     - build_android
 pages:
   stage: deploy
   script:
