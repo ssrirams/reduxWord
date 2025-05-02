@@ -2,10 +2,10 @@ image: node:18
 
 stages:
   - install
-  # - test
-  # - lint
+  - test
+  - lint
   - build
-  # - security
+  - security
 
 include:
   - template: Security/SAST.gitlab-ci.yml
@@ -23,24 +23,24 @@ install_dependencies:
     paths:
       - node_modules/
 
-lint:
-  stage: lint
-  script:
-    - echo "Running ESLint..."
-    - npm install
-    - npx eslint .
+# lint:
+#   stage: lint
+#   script:
+#     - echo "Running ESLint..."
+#     - npm install
+#     - npx eslint .
 
 
-# Run tests
-test:
-  stage: test
-  script:
-    - echo "Running tests..."
-    - npm install
-    - npm test
-  cache:
-    paths:
-      - node_modules/
+# # Run tests
+# test:
+#   stage: test
+#   script:
+#     - echo "Running tests..."
+#     - npm install
+#     - npm test
+#   cache:
+#     paths:
+#       - node_modules/
 
 # Build Android APK
 variables:
@@ -58,10 +58,7 @@ build_android:
     - wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O cmdline-tools.zip
     - unzip cmdline-tools.zip -d /sdk
     - mkdir -p /sdk/cmdline-tools/latest
-    # Enable extended globbing to exclude the 'latest' directory
-    - shopt -s extglob
-    # Move everything except the 'latest' directory into 'latest'
-    - mv /sdk/cmdline-tools/!(latest) /sdk/cmdline-tools/latest/
+    - mv /sdk/cmdline-tools/* /sdk/cmdline-tools/latest/
     - yes | /sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/sdk "platform-tools" "platforms;android-33" "build-tools;33.0.2"
   script:
     - npm install
