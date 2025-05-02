@@ -52,8 +52,8 @@ variables:
 build_android:
   stage: build
   before_script:
-  - apt-get update && apt-get install -y openjdk-11-jdk wget unzip
-  - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+  - apt-get update && apt-get install -y openjdk-17-jdk wget unzip
+  - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
   - mkdir -p /sdk
   - export ANDROID_SDK_ROOT=/sdk
   - wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O cmdline-tools.zip
