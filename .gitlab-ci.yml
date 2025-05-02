@@ -60,7 +60,7 @@ build_android:
     - unzip -q cmdline-tools.zip -d /sdk/tmp-tools
     - mkdir -p /sdk/cmdline-tools/latest
     - mv /sdk/tmp-tools/cmdline-tools/* /sdk/cmdline-tools/latest/
-    - yes | /sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/sdk --licenses
+    - yes | /sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/sdk --licenses # Automatically accepts licenses
     - /sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/sdk "platform-tools" "platforms;android-33" "build-tools;33.0.2"
     - chmod +x android/gradlew
 
@@ -77,7 +77,6 @@ build_android:
 
   only:
     - main
-
 
 
 
