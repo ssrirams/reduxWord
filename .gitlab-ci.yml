@@ -58,7 +58,8 @@ build_android:
     - wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O cmdline-tools.zip
     - unzip cmdline-tools.zip -d /sdk
     - mkdir -p /sdk/cmdline-tools/latest
-    - mv /sdk/cmdline-tools/* /sdk/cmdline-tools/latest/
+    # Move the contents of cmdline-tools (but not the 'latest' directory itself)
+    - find /sdk/cmdline-tools -mindepth 1 -maxdepth 1 ! -name 'latest' -exec mv {} /sdk/cmdline-tools/latest/ \;
     - yes | /sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/sdk "platform-tools" "platforms;android-33" "build-tools;33.0.2"
   script:
     - npm install
@@ -67,5 +68,6 @@ build_android:
     paths:
       - node_modules/
       - android/.gradle
+
 
 
