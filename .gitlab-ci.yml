@@ -24,12 +24,13 @@ install_dependencies:
     paths:
       - node_modules/
 
-# Lint
 lint:
   stage: lint
   script:
     - echo "Running ESLint..."
-    - npm run lint
+    - npm install
+    - npx eslint .
+
 
 # Run tests
 test:
