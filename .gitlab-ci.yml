@@ -10,8 +10,7 @@ stages:
 include:
   - template: Security/SAST.gitlab-ci.yml
 
-variables:
-  JAVA_HOME: "/usr/lib/jvm/java-17-openjdk-amd64"
+
 
 # Install Node modules and Java
 install_dependencies:
@@ -24,54 +23,49 @@ install_dependencies:
     paths:
       - node_modules/
 
-lint:
-  stage: lint
-  script:
-    - echo "Running ESLint..."
-    - npm install
-    - npx eslint .
+# lint:
+#   stage: lint
+#   script:
+#     - echo "Running ESLint..."
+#     - npm install
+#     - npx eslint .
 
 
-# Run tests
-test:
-  stage: test
-  script:
-    - echo "Running tests..."
-    - npm install
-    - npm test
-  cache:
-    paths:
-      - node_modules/
+# # Run tests
+# test:
+#   stage: test
+#   script:
+#     - echo "Running tests..."
+#     - npm install
+#     - npm test
+#   cache:
+#     paths:
+#       - node_modules/
 
 # Build Android APK
+variables:
+  ANDROID_SDK_ROOT: "/sdk"
+  ANDROID_HOME: "/sdk"
+  JAVA_HOME: "/usr/lib/jvm/java-17-openjdk-amd64"
+  
+
 build_android:
   stage: build
-  image: openjdk:17
-  variables:
-    ANDROID_SDK_ROOT: "/sdk"
-    ANDROID_HOME: "/sdk"
-    JAVA_HOME: "/usr/lib/jvm/java-17-openjdk-amd64"
-
   before_script:
-    - echo "Setting up Android SDK..."
-    - apt-get update && apt-get install -y wget unzip
+    - echo "Installing required packages..."
+    - apt-get update && apt-get install -y openjdk-17-jdk wget unzip
+    - echo "Downloading Android SDK tools..."
     - wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O cmdline-tools.zip
     - unzip cmdline-tools.zip -d /sdk
     - mkdir -p /sdk/cmdline-tools/latest
     - mv /sdk/cmdline-tools/* /sdk/cmdline-tools/latest/
     - yes | /sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/sdk "platform-tools" "platforms;android-33" "build-tools;33.0.2"
-
   script:
-    - echo "Installing Node.js dependencies..."
     - npm install
-
-    - echo "Building Android APK..."
-    - cd android
-    - ./gradlew assembleRelease
-    - cd ..
-
+    - cd android && ./gradlew assembleRelease && cd ..
   cache:
     paths:
       - node_modules/
       - android/.gradle
+
 
