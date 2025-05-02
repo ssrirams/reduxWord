@@ -55,16 +55,16 @@ build_android:
     - apt-get update && apt-get install -y openjdk-17-jdk wget unzip
     - mkdir -p /sdk
     - wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O cmdline-tools.zip
-    - unzip -q cmdline-tools.zip -d /sdk
-    - mkdir -p /sdk/cmdline-tools
-    - mv /sdk/cmdline-tools /sdk/cmdline-tools/latest
+    - unzip -q cmdline-tools.zip -d /sdk/tmp-tools
+    - mkdir -p /sdk/cmdline-tools/latest
+    - mv /sdk/tmp-tools/cmdline-tools/* /sdk/cmdline-tools/latest/
     - yes | /sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=/sdk "platform-tools" "platforms;android-33" "build-tools;33.0.2"
 
   script:
     - npm install
     - cd android
     - ./gradlew assembleRelease
-    - test -f app/build/outputs/apk/release/app-release.apk || { echo "APK build failed"; exit 1; }
+    - test -f app/build/outputs/apk/release/app-release.apk && echo "✅ APK built successfully!" || { echo "❌ APK build failed"; exit 1; }
 
   artifacts:
     paths:
