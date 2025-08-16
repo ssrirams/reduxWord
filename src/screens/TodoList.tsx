@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../redux/store';
+import { RootState } from '../redux/Store';
 import { addTodo, deleteTodo, toggleTodo } from '../redux/reducer/todosSlice';
 
 const TodoList: React.FC = () => {
@@ -17,7 +17,7 @@ const TodoList: React.FC = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Todo List</Text>
+            <Text style={styles.title}>Enter TODO</Text>
             <TextInput
                 value={text}
                 onChangeText={setText}
@@ -36,7 +36,7 @@ const TodoList: React.FC = () => {
                                 {item.text}
                             </Text>
                         </TouchableOpacity>
-                        <Button title="❌" onPress={() => dispatch(deleteTodo(item.id))} />
+                        <Button title="Close" onPress={() => dispatch(deleteTodo(item.id))} />
                     </View>
                 )}
             />
@@ -46,7 +46,7 @@ const TodoList: React.FC = () => {
 
 const styles = StyleSheet.create({
     container: { padding: 20, flex: 1, backgroundColor: '#fff' },
-    title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
+    title: { fontSize: 16, fontWeight: '400', marginBottom: 10 },
     input: {
         borderWidth: 1,
         borderColor: '#999',

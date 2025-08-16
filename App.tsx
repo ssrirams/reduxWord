@@ -4,10 +4,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import { store, persistor } from './src/redux/store';
-import HomeScreen from './src/screens/HomeScreen';
+import { store, persistor } from './src/redux/Store';
 import TodoList from './src/screens/TodoList';
-import WebViewScreen from './src/screens/WebViewScreen';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -22,10 +20,8 @@ export default function App() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Home">
-            <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Navigator initialRouteName="TodoList">
             <Stack.Screen name="TodoList" component={TodoList} />
-            <Stack.Screen name="WebView" component={WebViewScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>
